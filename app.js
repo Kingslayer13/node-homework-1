@@ -23,12 +23,8 @@ app.get('/files', function(request, response){
 
 app.get('/files/delete/:fileName', function(request, response){
    fs.unlink('files/' + request.params.fileName, function(error){
-       if (error) {
-           response.send(false);
-       }
-       else{
-           response.send(true);
-       }
+       var isSuccess = ! error;
+       response.send(isSuccess);
    });
 })
 
