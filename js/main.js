@@ -9,8 +9,19 @@ jQuery(function($){
         for(var i = 0; i < files.length; i++){
             var li = liClone.clone();
 
-            li.html(files[i]);
+            li.find('span').html(files[i]);
+
             li.appendTo(list);
         }
     });
+
+    list.on('click', '.trash', function(event){
+        $(event.target).closest('li').remove();
+
+        // event.preventDefault();
+        // event.stopPropagation();
+        return false;
+    });
+
+    // TODO create form
 });
