@@ -10,16 +10,24 @@ jQuery(function($){
             var li = liClone.clone();
 
             li.find('span').html(files[i]);
+            li.find('a').prop('href', '/files/delete/' + files[i]); // REST API
 
             li.appendTo(list);
         }
     });
 
-    list.on('click', '.trash', function(event){
-        $(event.target).closest('li').remove();
+    list.on('click', 'a', function(event){
 
-        // event.preventDefault();
-        // event.stopPropagation();
+
+        $.get(event.currentTarget.href, function(isSuccess){
+            if (isSuccess){
+                $(event.target).closest('li').remove();
+            }
+            else{
+                alert('error');
+            }
+        });
+
         return false;
     });
 
