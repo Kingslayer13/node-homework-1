@@ -9,9 +9,7 @@ app.get('*', function(request, response, nextRoute){
             return;
         }
 
-        fs.readFile(file, function(error, fileContent){
-            response.end(fileContent);
-        });
+        response.sendfile(file);
     });
 });
 
@@ -26,6 +24,6 @@ app.get('/files/delete/:fileName', function(request, response){
        var isSuccess = ! error;
        response.send(isSuccess);
    });
-})
+});
 
 app.listen(1333);
