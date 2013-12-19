@@ -17,16 +17,19 @@ jQuery(function($){
     });
 
     list.on('click', 'a', function(event){
-
-
-        $.get(event.currentTarget.href, function(isSuccess){
-            if (isSuccess){
-                $(event.target).closest('li').remove();
-            }
-            else{
-                alert('error');
-            }
-        });
+        var link = event.currentTarget;
+        /**
+         * $.get() reutrns jqXHR
+         * @link http://api.jquery.com/jQuery.ajax/#jqXHR
+         */
+        $.get(link.href)
+            .done(function(){
+                $(link).closest('li').remove();
+            })
+            .fail(function(result){
+                alert('Error: ' + result.responseText);
+            })
+        ;
 
         return false;
     });

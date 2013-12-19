@@ -3,6 +3,9 @@ var app = require('express')(),
 
 app.get('*', function(request, response, nextRoute){
     var file = '.' + request.path;
+
+    if (file === './') file = './index.html';
+
     fs.stat(file, function(error, info){
         if (error || ! info.isFile()) {
             nextRoute();
@@ -21,8 +24,12 @@ app.get('/files', function(request, response){
 
 app.get('/files/delete/:fileName', function(request, response){
    fs.unlink('files/' + request.params.fileName, function(error){
-       var isSuccess = ! error;
-       response.send(isSuccess);
+       if (error) {
+           response.send(500, error);
+       }
+       else {
+           response.send('success');
+       }
    });
 });
 
