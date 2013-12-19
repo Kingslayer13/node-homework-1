@@ -44,7 +44,8 @@ app.all('/files/create', function(request, response){
 
 app.listen(1333);
 
-//=====================================================================
+//region ================== Utils =====================================
+
 /**
  * @param {String|Function} message
  * @param {{using: Function}} options
@@ -64,3 +65,5 @@ function ifNotErrorSend(message, options){
         }
     }
 }
+
+//endregion ===========================================================

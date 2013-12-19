@@ -30,7 +30,7 @@ jQuery(function($){
         return false;
     });
 
-    //=====================================================================
+    //region ================== Utils =====================================
 
     /**
      * @param name
@@ -85,4 +85,6 @@ jQuery(function($){
     function showResponse(response){
         alert(response.responseText);
     }
+
+    //endregion ===========================================================
 });
