@@ -11,7 +11,17 @@
     <li id="clone"><span>Name of file</span> <a href="#"><i class="trash icon"></i></a></li>
 </ol>
 
-<!--TODO add form-->
+<form id="add-file" action="/files/create" method="post" class="ui form segment">
+    <div class="field">
+        <label>File name</label>
+        <input type="text" name="name">
+    </div>
+    <div class="field">
+        <label>Content</label>
+        <textarea name="content"></textarea>
+    </div>
+    <button class="ui blue submit button">Add</button>
+</form>
 
 <script type="text/javascript" src="js/main.js"></script>
 </body>

@@ -7,32 +7,51 @@ jQuery(function($){
 
     $.get('/files', function(files){
         for(var i = 0; i < files.length; i++){
-            var li = liClone.clone();
-
-            li.find('span').html(files[i]);
-            li.find('a').prop('href', '/files/delete/' + files[i]); // REST API
-
-            li.appendTo(list);
+            addFile(files[i]);
         }
     });
 
     list.on('click', 'a', function(event){
         var link = event.currentTarget;
-        /**
-         * $.get() reutrns jqXHR
-         * @link http://api.jquery.com/jQuery.ajax/#jqXHR
-         */
+
         $.get(link.href)
+            // $.get() returns jqXHR object
+            // http://api.jquery.com/jQuery.ajax/#jqXHR
             .done(function(){
                 $(link).closest('li').remove();
             })
             .fail(function(result){
-                alert('Error: ' + result.responseText);
+                alert(result.responseText);
             })
         ;
 
         return false;
     });
 
-    // TODO create form
+    $('#add-file').submit(function(){
+        $.ajax({
+            url: this.action,
+            type: this.method,
+            data: $(this).serialize(),
+            success: function(result){
+                addFile(result);
+            },
+            error: function(result){
+                alert(result.responseText);
+            }
+        });
+
+        return false;
+    });
+
+    //=====================================================================
+
+    function addFile(name){
+        var li = liClone.clone();
+
+        li.find('span').html(name);
+        li.find('a').prop('href', '/files/delete/' + name); // REST API
+
+        li.appendTo(list);
+    }
 });
