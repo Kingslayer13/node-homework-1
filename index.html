@@ -8,10 +8,10 @@
 <body>
 
 <ol class="ui list">
-    <li id="clone"><span>Name of file</span> <a href="#"><i class="trash icon"></i></a></li>
+    <li id="clone"><span class="name">Name of file</span> <a class="remove" href="/files/delete/:fileName"><i class="trash icon"></i></a></li>
 </ol>
 
-<form id="add-file" action="/files/create" method="post" class="ui form segment">
+<form id="add-file-form" action="/files/create" method="post" class="ui form segment">
     <div class="field">
         <label>File name</label>
         <input type="text" name="name">

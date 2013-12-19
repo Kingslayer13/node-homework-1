@@ -1,44 +1,30 @@
 jQuery(function($){
 
-    var liClone = $('#clone'),
-        list = liClone.parent();
+    var fileTemplate = $('#clone'),
+        filesList = fileTemplate.parent();
 
-    liClone.detach();
+    fileTemplate.prop('id', '').detach();
 
-    $.get('/files', function(files){
-        for(var i = 0; i < files.length; i++){
-            addFile(files[i]);
-        }
-    });
+    $.get('/files', addFile);
 
-    list.on('click', 'a', function(event){
+    filesList.on('click', '.remove', function(event){
         var link = event.currentTarget;
 
         $.get(link.href)
-            // $.get() returns jqXHR object
-            // http://api.jquery.com/jQuery.ajax/#jqXHR
-            .done(function(){
-                $(link).closest('li').remove();
-            })
-            .fail(function(result){
-                alert(result.responseText);
-            })
+            .done(removeFile)
+            .fail(showResponse)
         ;
 
         return false;
     });
 
-    $('#add-file').submit(function(){
+    $('#add-file-form').submit(function(){
         $.ajax({
             url: this.action,
             type: this.method,
             data: $(this).serialize(),
-            success: function(result){
-                addFile(result);
-            },
-            error: function(result){
-                alert(result.responseText);
-            }
+            success: addFile,
+            error: showResponse
         });
 
         return false;
@@ -46,12 +32,52 @@ jQuery(function($){
 
     //=====================================================================
 
+    /**
+     * @param name
+     * @returns {jQuery}
+     */
+    function getFile(name){
+        return filesList.find('[data-name="'+ name +'"]')
+    }
+
+    /**
+     * @param name
+     * @returns {jQuery}
+     */
     function addFile(name){
-        var li = liClone.clone();
+        if (name instanceof Array) {
+            for (var i = 0, len = name.length; i < len; i++) {
+                addFile(name[i]);
+            }
+        }
 
-        li.find('span').html(name);
-        li.find('a').prop('href', '/files/delete/' + name); // REST API
+        var file = getFile(name);
 
-        li.appendTo(list);
+        if (file.length > 0) return file;
+
+        file = fileTemplate.clone();
+
+        file.attr('data-name', name);
+        file.find('.name').html(name);
+        file.find('.remove').prop(function(){
+            return this.href.replace(':fileName', name);
+        });
+
+        return file.appendTo(filesList);
+    }
+
+    /**
+     * @param name
+     * @returns {jQuery}
+     */
+    function removeFile(name){
+        return getFile(name).remove();
+    }
+
+    /**
+     * @param {XMLHttpRequest} response
+     */
+    function showResponse(response){
+        alert(response.responseText);
     }
 });

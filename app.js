@@ -20,31 +20,47 @@ app.get('*', function(request, response, nextRoute){
 });
 
 app.get('/files', function(request, response){
-    fs.readdir('files', function(err, files){
-        response.send(files);
-    });
+    fs.readdir('./files', ifNotErrorSend(function(error, files){
+        return files;
+    }, {"using": response}));
 });
 
-app.get('/files/delete/:fileName', function(request, response){
-   fs.unlink('files/' + request.params.fileName, function(error){
-       if (error) {
-           response.send(500, error);
-       }
-       else {
-           response.send('success');
-       }
-   });
+app.get('/files/delete/:name', function(request, response){
+    var name = request.param('name');
+    fs.unlink(
+       './files/' + name,
+       ifNotErrorSend(name, {"using": response})
+   );
 });
 
-app.post('/files/create', function(request, response){
-    fs.writeFile('./files/' + request.body.name, request.body.content, function(error){
-        if (error) {
-            response.send(500, error);
-        }
-        else {
-            response.send(request.body.name);
-        }
-    });
+app.all('/files/create', function(request, response){
+    var name = request.param('name');
+    fs.writeFile(
+        './files/' + name,
+        request.param('content'),
+        ifNotErrorSend(name, {"using": response})
+    );
 });
 
 app.listen(1333);
+
+//=====================================================================
+/**
+ * @param {String|Function} message
+ * @param {{using: Function}} options
+ * @returns {Function}
+ */
+function ifNotErrorSend(message, options){
+    return function(error){
+        if (! error) {
+            if (typeof message === 'function') {
+                message = message.apply(this, arguments);
+            }
+
+            options.using.send(message);
+        }
+        else {
+            options.using.send(500, error);
+        }
+    }
+}
