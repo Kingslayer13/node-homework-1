@@ -45,13 +45,18 @@ jQuery(function($){
      * @returns {jQuery}
      */
     function addFile(name){
+        var file;
+
         if (name instanceof Array) {
+            var files = $([]);
             for (var i = 0, len = name.length; i < len; i++) {
-                addFile(name[i]);
+                file = addFile(name[i]);
+                files = files.add(file);
             }
+            return files;
         }
 
-        var file = getFile(name);
+        file = getFile(name);
 
         if (file.length > 0) return file;
 
@@ -59,7 +64,7 @@ jQuery(function($){
 
         file.attr('data-name', name);
         file.find('.name').html(name);
-        file.find('.remove').prop(function(){
+        file.find('.remove').prop('href', function(){
             return this.href.replace(':fileName', name);
         });
 
