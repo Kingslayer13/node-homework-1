@@ -20,50 +20,39 @@ app.get('*', function(request, response, nextRoute){
 });
 
 app.get('/files', function(request, response){
-    fs.readdir('./files', ifNotErrorSend(function(error, files){
-        return files;
-    }, {"using": response}));
+    fs.readdir('./files', function(error, files){
+        response.send(error || files);
+    });
 });
 
 app.get('/files/delete/:name', function(request, response){
     var name = request.param('name');
-    fs.unlink(
-       './files/' + name,
-       ifNotErrorSend(name, {"using": response})
-   );
+    fs.unlink('./files/' + name, function(error){
+        response.send(error || name);
+    });
 });
 
 app.all('/files/create', function(request, response){
     var name = request.param('name');
-    fs.writeFile(
-        './files/' + name,
-        request.param('content'),
-        ifNotErrorSend(name, {"using": response})
-    );
+    fs.writeFile('./files/' + name, request.param('content'), function(error){
+        response.send(error || name);
+    });
 });
 
 app.listen(1333);
 
 //region ================== Utils =====================================
 
-/**
- * @param {String|Function} message
- * @param {{using: Function}} options
- * @returns {Function}
- */
-function ifNotErrorSend(message, options){
-    return function(error){
-        if (! error) {
-            if (typeof message === 'function') {
-                message = message.apply(this, arguments);
-            }
-
-            options.using.send(message);
+(function(){
+    var _send = app.response.__proto__.send;
+    app.response.__proto__.send = function(value){
+        if (value instanceof Error) {
+            _send.call(this, 500, value);
         }
         else {
-            options.using.send(500, error);
+            _send.apply(this, arguments);
         }
-    }
-}
+    };
+})();
 
 //endregion ===========================================================

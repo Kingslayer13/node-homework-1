@@ -19,13 +19,7 @@ jQuery(function($){
     });
 
     $('#add-file-form').submit(function(){
-        $.ajax({
-            url: this.action,
-            type: this.method,
-            data: $(this).serialize(),
-            success: addFile,
-            error: showResponse
-        });
+        send(this).done(addFile).fail(showResponse);
 
         return false;
     });
@@ -84,6 +78,14 @@ jQuery(function($){
      */
     function showResponse(response){
         alert(response.responseText);
+    }
+
+    function send(form){
+        return $.ajax({
+            url: form.action,
+            type: form.method,
+            data: $(form).serialize()
+        });
     }
 
     //endregion ===========================================================
