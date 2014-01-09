@@ -8,13 +8,15 @@
 <body>
 
 <ol class="ui list">
-    <li id="clone"><span class="name">Name of file</span> <a class="remove" href="/files/delete/:fileName"><i class="trash icon"></i></a></li>
+    <li class="template-files"><span class="name">Name of file</span> <a class="remove" href="/files/delete/:fileName"><i class="trash icon"></i></a></li>
 </ol>
 
-<form id="add-file-form" action="/files/create" method="post" class="ui form segment">
+<input type="text" class="template-input"/>
+
+<form id="add-file-form" action="/files/create" class="ui form segment">
     <div class="field">
         <label>File name</label>
-        <input type="text" name="name">
+        <input type="text" name="method">
     </div>
     <div class="field">
         <label>Content</label>

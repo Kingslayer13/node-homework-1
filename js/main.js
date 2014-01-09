@@ -1,22 +1,27 @@
 jQuery(function($){
 
+    function getMeta(name){
+        var arr = getMeta.names || (getMeta.names = {});
+
+        if (arr[name]) return arr[name];
+        //...
+        arr[name] = asdsad;
+        return arr[name];
+    }
+
     prepareTemplates();
 
-    $.get('/files', addFile);
+    send('/files').done(addFiles);
 
-    $('#files-list').on('click', '.remove', function(event){
+    '#files-list'.on('click', '.remove', function(event){
         var link = event.currentTarget;
-
-        $.get(link.href)
-            .done(removeFile)
-            .fail(showResponse)
-        ;
+        send(link).done(removeFile);
 
         return false;
     });
 
-    $('#add-file-form').submit(function(){
-        send(this).done(addFile).fail(showResponse);
+    '#add-file-form'.on('submit', function(){
+        send(this).done(addFile);
 
         return false;
     });
@@ -24,6 +29,11 @@ jQuery(function($){
     //region ================== Utils =====================================
 
     function prepareTemplates() {
+        String.prototype.on = function() {
+            var node = $(this.valueOf());
+            return node.on.apply(node, arguments);
+        };
+
         templates.files = $('#clone').prop('id', '').detach();
     }
 
@@ -46,15 +56,6 @@ jQuery(function($){
     function addFile(name){
         var file;
 
-        if (name instanceof Array) {
-            var files = $([]);
-            for (var i = 0, len = name.length; i < len; i++) {
-                file = addFile(name[i]);
-                files = files.add(file);
-            }
-            return files;
-        }
-
         file = getFile(name);
 
         if (file.length > 0) return file;
@@ -68,6 +69,15 @@ jQuery(function($){
         });
 
         return file.appendTo(filesList);
+    }
+
+    function addFiles(names) {
+        var files = $([]);
+        for (var i = 0, len = names.length; i < len; i++) {
+            file = addFile(names[i]);
+            files = files.add(file);
+        }
+        return files;
     }
 
     /**
@@ -85,12 +95,24 @@ jQuery(function($){
         alert(response.responseText);
     }
 
-    function send(form){
+    /**
+     * @param {HTMLFormElement|HTMLAnchorElement|String} target
+     * @returns {jqXHR}
+     */
+    function send(target){
+        if (target instanceof HTMLAnchorElement) {
+            target = target.href;
+        }
+
+        if (target instanceof String) {
+            return $.get(target).fail(showResponse);
+        }
+
         return $.ajax({
-            url: form.action,
-            type: form.method,
-            data: $(form).serialize()
-        });
+            url:  target.action,
+            type: target.method,
+            data: $(target).serialize()
+        }).fail(showResponse);
     }
 
     //endregion ===========================================================
