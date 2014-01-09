@@ -1,13 +1,10 @@
 jQuery(function($){
 
-    var fileTemplate = $('#clone'),
-        filesList = fileTemplate.parent();
-
-    fileTemplate.prop('id', '').detach();
+    prepareTemplates();
 
     $.get('/files', addFile);
 
-    filesList.on('click', '.remove', function(event){
+    $('#files-list').on('click', '.remove', function(event){
         var link = event.currentTarget;
 
         $.get(link.href)
@@ -25,6 +22,14 @@ jQuery(function($){
     });
 
     //region ================== Utils =====================================
+
+    function prepareTemplates() {
+        templates.files = $('#clone').prop('id', '').detach();
+    }
+
+    function templates() {
+
+    }
 
     /**
      * @param name
@@ -54,7 +59,7 @@ jQuery(function($){
 
         if (file.length > 0) return file;
 
-        file = fileTemplate.clone();
+        file = templates.file.clone();
 
         file.attr('data-name', name);
         file.find('.name').html(name);
