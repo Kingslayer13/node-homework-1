@@ -34,7 +34,10 @@ jQuery(function($){
             return node.on.apply(node, arguments);
         };
 
-        templates.files = $('#clone').prop('id', '').detach();
+        $('[class^="template-"], [class*=" template-"]').each(function () {
+            var name = this.className.match(/\btemplate-(\w+)/)[1];
+            templates[name] = $(this).detach();
+        });
     }
 
     function templates() {
