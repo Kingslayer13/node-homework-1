@@ -49,7 +49,7 @@ jQuery(function($){
      * @returns {jQuery}
      */
     function getFile(name){
-        return filesList.find('[data-name="'+ name +'"]')
+        return $('#files-list [data-name="'+ name +'"]');
     }
 
     /**
@@ -71,7 +71,7 @@ jQuery(function($){
             return this.href.replace(':fileName', name);
         });
 
-        return file.appendTo(filesList);
+        return file.appendTo('#files-list');
     }
 
     function addFiles(names) {
