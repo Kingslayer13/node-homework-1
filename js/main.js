@@ -107,7 +107,7 @@ jQuery(function($){
             target = target.href;
         }
 
-        if (target instanceof String) {
+        if (typeof target === 'string') {
             return $.get(target).fail(showResponse);
         }
 
