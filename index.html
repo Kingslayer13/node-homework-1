@@ -3,20 +3,23 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="css/semantic.min.css"/>
-    <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+    <script src="js/lib/requirejs/require.js"></script>
+    <script src="js/lib/jquery/jquery.min.js"></script>
+    <script src="js/lib/underscore/underscore-min.js"></script>
+    <script src="js/lib/backbone/backbone.js"></script>
+    <script src="js/main.js"></script>
+
 </head>
 <body>
 
 <ol id="files-list" class="ui list">
-    <li class="template-files"><span class="name">Name of file</span> <a class="remove" href="/files/delete/:fileName"><i class="trash icon"></i></a></li>
+    <li class="template-file"><span class="name">Name of file</span> <a class="remove" href="/files/delete/:fileName"><i class="trash icon"></i></a></li>
 </ol>
-
-<input type="text" class="template-input"/>
 
 <form id="add-file-form" action="/files/create" class="ui form segment">
     <div class="field">
         <label>File name</label>
-        <input type="text" name="method">
+        <input type="text" name="name">
     </div>
     <div class="field">
         <label>Content</label>
@@ -25,6 +28,5 @@
     <button class="ui blue submit button">Add</button>
 </form>
 
-<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

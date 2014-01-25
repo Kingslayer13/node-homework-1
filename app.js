@@ -21,11 +21,16 @@ app.get('*', function(request, response, nextRoute){
 
 app.get('/files', function(request, response){
     fs.readdir('./files', function(error, files){
-        response.send(error || files);
+        files = files.map(function(name){
+            return {
+                name: name
+            };
+        });
+        response.send(files);
     });
 });
 
-app.get('/files/delete/:name', function(request, response){
+app.delete('/files/:name', function(request, response){
     var name = request.param('name');
     fs.unlink('./files/' + name, function(error){
         response.send(error || name);
