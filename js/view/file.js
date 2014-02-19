@@ -1,4 +1,4 @@
-define([], function(){
+define(['backbone'], function(Backbone){
 
     var fileTemplate = $('.template-file').detach();
 
